@@ -4,7 +4,6 @@ from fastapi import FastAPI, HTTPException
 from model import PokemonBase, PokemonResponse
 import csv
 import os
-
 app = FastAPI()
 
 CSV_FILE = "pokedex.csv"
