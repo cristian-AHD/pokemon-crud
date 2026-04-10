@@ -67,6 +67,29 @@ async def delete_pokemon(id: int):
 
     return {"mensaje": "Pokemon eliminado correctamente"}
 
+@app.put("/pokemon/{id}/level")
+async def level_up_pokemon(id: int):
+    pokemons = []
+    found = False
+
+    with open(CSV_FILE, newline="") as file:
+        reader = csv.DictReader(file)
+        for p in reader:
+            if int(p["id"]) == id:
+                p["level"] = str(int(p["level"]) + 1)  # subir nivel
+                found = True
+            pokemons.append(p)
+
+    if not found:
+        raise HTTPException(status_code=404, detail="Pokemon no encontrado")
+
+    # guardar cambios
+    with open(CSV_FILE, "w", newline="") as file:
+        writer = csv.DictWriter(file, fieldnames=pokemons[0].keys())
+        writer.writeheader()
+        writer.writerows(pokemons)
+
+    return {"mensaje": "Nivel aumentado"}
 
 @app.get("/")
 async def root():
